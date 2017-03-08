@@ -88,12 +88,16 @@ do_coveralls(ConvertAndSend, Get, GetLocal, MaybeSkip, Task) ->
           io:format("rebar_coveralls:"
                     "Exporting cover data "
                     "from ~s using service ~s and jobid ~s~n",
-                    [File, ServiceName, ServiceJobId]),
+                    [lists:join(", ", to_files_list(File)), ServiceName, ServiceJobId]),
           ok = ConvertAndSend(File, ServiceJobId, ServiceName, RepoToken);
         _ -> MaybeSkip()
       end
   end.
 
+to_files_list([L|_]=File) when is_integer(L) ->
+  [File];
+to_files_list(Files) ->
+  Files.
 
 %%=============================================================================
 %% Tests
